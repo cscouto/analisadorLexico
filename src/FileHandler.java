@@ -46,14 +46,14 @@ public class FileHandler extends BufferedReader {
 	throws EOFException, IOException {
 		this.mark(1);
 		int charValue = this.read();
+		if (charValue == -1) throw new EOFException(); 
 		column++;
 		if (charValue == Character.LINE_SEPARATOR) {
 			line++;
 			lastLineSize = column;
 			column = 0;
 		} 
-		
-		if (charValue == -1) throw new EOFException(); 
+	
 		return (char) charValue; 
 	}
 	
