@@ -1,10 +1,9 @@
-/**
- * Classe que implementa funcionalidades para manipulacao de arquivos.
- * @author Giulliano P. Carnielli
- */
-package com.br.analisadorlexico.utils;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class FileHandler extends BufferedReader {
 	
