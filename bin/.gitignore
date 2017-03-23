@@ -1,8 +1,8 @@
 /AnLexico.class
 /AnSintatico.class
+/Compilador.class
 /ErrorHandler.class
 /FileHandler.class
-/TabSimbols.class
-/Token.class
-/Compilador.class
 /TabSymbols.class
+/Token.class
+/TokenID.class

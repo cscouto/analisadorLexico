@@ -7,7 +7,12 @@ public class AnSintatico {
 	}
 
 	public void start() {
-		// TODO Auto-generated method stub	
+		Token t = lexico.nextToken();
+		
+		while (t.getTokenCode() != TokenID.EOF){
+			t.print();
+			t = lexico.nextToken();
+		}
 	}
 	
 }

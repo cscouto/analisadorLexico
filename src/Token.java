@@ -1,11 +1,11 @@
 
 public class Token {
-	private int tokenCode; 
+	private TokenID tokenCode; 
 	private String lexema; 
 	private int lin; 
 	private int col;
 	
-	public Token (int tokenCode, String lexema, int lin, int col){
+	public Token (TokenID tokenCode, String lexema, int lin, int col){
 		this.tokenCode 	= tokenCode;
 		this.lexema 	= lexema;
 		this.lin 		= lin;
@@ -24,8 +24,12 @@ public class Token {
 		return lin;
 	}
 	
-	public int getTokenCode() {
+	public TokenID getTokenCode() {
 		return tokenCode;
+	}
+
+	public void print() {
+		System.out.println(this.lexema);
 	}
 	
 }
