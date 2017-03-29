@@ -2,17 +2,37 @@
 public class Token {
 	private TokenID tokenCode; 
 	private String lexema; 
-	private int lin; 
-	private int col;
+	private long lin; 
+	private long col;
 	
-	public Token (TokenID tokenCode, String lexema, int lin, int col){
+	public Token (TokenID tokenCode, String lexema, long lin, long col){
 		this.tokenCode 	= tokenCode;
 		this.lexema 	= lexema;
 		this.lin 		= lin;
 		this.col    	= col;
 	}
+	public Token(){
+		
+	}
 	
-	public int getCol() {
+	public void setCol(long col) {
+		this.col = col;
+	}
+	
+	public void setLin(long lin) {
+		this.lin = lin;
+	}
+	
+	public void setLexema(String lexema) {
+		this.lexema = lexema;
+	}
+	
+	
+	public void setTokenCode(TokenID tokenCode) {
+		this.tokenCode = tokenCode;
+	}
+	
+	public long getCol() {
 		return col;
 	}
 	
@@ -20,7 +40,7 @@ public class Token {
 		return lexema;
 	}
 	
-	public int getLin() {
+	public long getLin() {
 		return lin;
 	}
 	
@@ -29,7 +49,10 @@ public class Token {
 	}
 
 	public void print() {
-		System.out.println(this.lexema);
+		if (this.lexema != null){
+			if (!this.lexema.isEmpty())
+				System.out.println(this.lexema);
+		}
 	}
 	
 }
