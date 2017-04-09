@@ -1,4 +1,3 @@
-import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -29,7 +28,7 @@ public class AnLexico {
 				ch = fileHandler.getNextChar();
 			}
 			
-			//comentarios //TODO
+			//comentarios 
 			if (ch == ':'){
 				ch = fileHandler.getNextChar();
 				if (ch =='{'){
@@ -44,14 +43,16 @@ public class AnLexico {
 					}
 				}
 			}
-
+			
+			token = new Token();
+			token.setLin(lin);
+			token.setCol(col);
+			dados.append(ch);
 			// NUM_INT
 			if (Character.isDigit(ch)) {
+				token.setTokenCode(TokenID.NUM_INT);
+				ch = fileHandler.getNextChar();
 				while (Character.isDigit(ch)) {
-					token = new Token();
-					token.setLin(lin);
-					token.setCol(col);
-					token.setTokenCode(TokenID.NUM_INT);
 					dados.append(ch);
 					ch = fileHandler.getNextChar();
 
@@ -71,14 +72,8 @@ public class AnLexico {
 						} else {
 							// erro lexico
 							fileHandler.resetLastChar();
-							StringBuilder erro = new StringBuilder();
-							erro.append("Float invalido: ");
-							erro.append(dados.toString());
-							erro.append(" linha: ");
-							erro.append(lin);
-							erro.append(" col: ");
-							erro.append(col);
-							ErrorHandler.getInstance().addErro(erro.toString());
+							
+							trataErros(dados, lin, col);
 							
 							token.setTokenCode(TokenID.ERROR);
 							token.setLexema(dados.toString());
@@ -93,11 +88,7 @@ public class AnLexico {
 
 			// LITERAl
 			if (ch == '\'') {
-				token = new Token();
-				token.setLin(lin);
-				token.setCol(col);
 				token.setTokenCode(TokenID.LITERAL);
-				dados.append(ch);
 				ch = fileHandler.getNextChar();
 				while (ch != '\'') {
 					dados.append(ch);
@@ -110,11 +101,7 @@ public class AnLexico {
 
 			// ID
 			if (Character.isLetterOrDigit(ch) || ch == '_') {
-				token = new Token();
-				token.setLin(lin);
-				token.setCol(col);
 				token.setTokenCode(TokenID.ID);
-				dados.append(ch);
 				ch = fileHandler.getNextChar();
 				while(Character.isLetterOrDigit(ch) || ch == '_'){
 					dados.append(ch);
@@ -137,11 +124,7 @@ public class AnLexico {
 
 			// REL_OP
 			if (ch == '$') {
-				token = new Token();
-				token.setLin(lin);
-				token.setCol(col);
 				token.setTokenCode(TokenID.REL_OP);
-				dados.append(ch);
 				ch = fileHandler.getNextChar();
 				if (ch == 'l' || ch == 'g') {
 					dados.append(ch);
@@ -157,14 +140,8 @@ public class AnLexico {
 					} else {
 						// erro 
 						fileHandler.resetLastChar();
-						StringBuilder erro = new StringBuilder();
-						erro.append("Op. Rel. invalido: ");
-						erro.append(dados.toString());
-						erro.append(" linha: ");
-						erro.append(lin);
-						erro.append(" col: ");
-						erro.append(col);
-						ErrorHandler.getInstance().addErro(erro.toString());
+						
+						trataErros(dados, lin, col);
 						
 						token.setTokenCode(TokenID.ERROR);
 						token.setLexema(dados.toString());
@@ -180,14 +157,8 @@ public class AnLexico {
 					} else {
 						// erro 
 						fileHandler.resetLastChar();
-						StringBuilder erro = new StringBuilder();
-						erro.append("Op. Rel. invalido: ");
-						erro.append(dados.toString());
-						erro.append(" linha: ");
-						erro.append(lin);
-						erro.append(" col: ");
-						erro.append(col);
-						ErrorHandler.getInstance().addErro(erro.toString());
+						
+						trataErros(dados, lin, col);
 						
 						token.setTokenCode(TokenID.ERROR);
 						token.setLexema(dados.toString());
@@ -196,14 +167,8 @@ public class AnLexico {
 				} else {
 					// erro
 					fileHandler.resetLastChar();
-					StringBuilder erro = new StringBuilder();
-					erro.append("Op. Rel. invalido: ");
-					erro.append(dados.toString());
-					erro.append(" linha: ");
-					erro.append(lin);
-					erro.append(" col: ");
-					erro.append(col);
-					ErrorHandler.getInstance().addErro(erro.toString());
+					
+					trataErros(dados, lin, col);
 					
 					token.setTokenCode(TokenID.ERROR);
 					token.setLexema(dados.toString());
@@ -213,33 +178,21 @@ public class AnLexico {
 
 			// ADDSUB_OP
 			if (ch == '+' || ch == '-') {
-				token = new Token();
-				token.setLin(lin);
-				token.setCol(col);
 				token.setTokenCode(TokenID.ADDSUB_OP);
-				dados.append(ch);
 				token.setLexema(dados.toString());
 				return token;
 			}else
 
 			// MULTDIV_OP
 			if (ch == '*' || ch == '/') {
-				token = new Token();
-				token.setLin(lin);
-				token.setCol(col);
 				token.setTokenCode(TokenID.MULTDIV_OP);
-				dados.append(ch);
 				token.setLexema(dados.toString());
 				return token;
 			}
 
 			// ATTRIB_OP
 			if (ch == '<') {
-				token = new Token();
-				token.setLin(lin);
-				token.setCol(col);
 				token.setTokenCode(TokenID.ATTRIB_OP);
-				dados.append(ch);
 				ch = fileHandler.getNextChar();
 				if (ch == '-') {
 					dados.append(ch);
@@ -248,14 +201,8 @@ public class AnLexico {
 				} else {
 					// error
 					fileHandler.resetLastChar();
-					StringBuilder erro = new StringBuilder();
-					erro.append("Op. Atrib. invalido: ");
-					erro.append(dados.toString());
-					erro.append(" linha: ");
-					erro.append(lin);
-					erro.append(" col: ");
-					erro.append(col);
-					ErrorHandler.getInstance().addErro(erro.toString());
+					
+					trataErros(dados, lin, col);
 					
 					token.setTokenCode(TokenID.ERROR);
 					token.setLexema(dados.toString());
@@ -265,55 +212,29 @@ public class AnLexico {
 
 			// TERM
 			if (ch == ';') {
-				token = new Token();
-				token.setLin(lin);
-				token.setCol(col);
 				token.setTokenCode(TokenID.TERM);
-				dados.append(ch);
 				token.setLexema(dados.toString());
 				return token;
 			}else
 
 			// L_PAR
 			if (ch == '(') {
-				token = new Token();
-				token.setLin(lin);
-				token.setCol(col);
 				token.setTokenCode(TokenID.L_PAR);
-				dados.append(ch);
 				token.setLexema(dados.toString());
 				return token;
 			}else
 
 			// R_PAR
 			if (ch == ')') {
-				dados.append(ch);
-				token = new Token();
-				token.setLin(lin);
-				token.setCol(col);
 				token.setTokenCode(TokenID.R_PAR);
-				dados.append(ch);
 				token.setLexema(dados.toString());
 				return token;
 			} else {
-				token = new Token();
-				dados.append(ch);
-				StringBuilder erro = new StringBuilder();
-				erro.append("Character invalido: ");
-				erro.append(dados.toString());
-				erro.append(" linha: ");
-				erro.append(lin);
-				erro.append(" col: ");
-				erro.append(col);
-				ErrorHandler.getInstance().addErro(erro.toString());
-				
-				token.setLin(lin);
-				token.setCol(col);
+				trataErros(dados, lin, col);
 				token.setTokenCode(TokenID.ERROR);
 				token.setLexema(dados.toString());
 				return token;
 			}
-	
  
 		} catch (IOException e){
 			if (token == null) {
@@ -343,5 +264,16 @@ public class AnLexico {
 			}
 		}
 		return null;
+	}
+
+	private void trataErros(StringBuilder dados, long lin, long col) {
+		StringBuilder erro = new StringBuilder();
+		erro.append("Token invalido: ");
+		erro.append(dados.toString());
+		erro.append(" linha: ");
+		erro.append(lin);
+		erro.append(" col: ");
+		erro.append(col);
+		ErrorHandler.getInstance().addErro(erro.toString());
 	}
 }
