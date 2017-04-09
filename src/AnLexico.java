@@ -1,3 +1,6 @@
+//Tiago Henrique Do Couto
+//Caique Souza
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -48,6 +51,7 @@ public class AnLexico {
 			token.setLin(lin);
 			token.setCol(col);
 			dados.append(ch);
+			
 			// NUM_INT
 			if (Character.isDigit(ch)) {
 				token.setTokenCode(TokenID.NUM_INT);

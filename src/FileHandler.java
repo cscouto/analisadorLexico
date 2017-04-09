@@ -1,3 +1,6 @@
+//Tiago Henrique Do Couto
+//Caique Souza
+
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;

@@ -1,3 +1,5 @@
+//Tiago Henrique Do Couto
+//Caique Souza
 
 public class Token {
 	private TokenID tokenCode; 

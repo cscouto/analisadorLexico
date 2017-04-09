@@ -1,3 +1,5 @@
+//Tiago Henrique Do Couto
+//Caique Souza
 
 public enum TokenID {
 	NUM_INT(1),
