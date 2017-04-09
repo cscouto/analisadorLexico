@@ -2,6 +2,9 @@
 public enum TokenID {
 	NUM_INT(1),
 	NUM_FLOAT(2),
+	LITERAL(3),
+	REL_OP(4),
+	ADDSUB_OP(5),
 	LOGIC_VALUE(12),
 	LOGIC_OP(13),
 	TYPE(14),
