@@ -3,8 +3,14 @@ public enum TokenID {
 	NUM_INT(1),
 	NUM_FLOAT(2),
 	LITERAL(3),
-	REL_OP(4),
-	ADDSUB_OP(5),
+	ID(4),
+	REL_OP(5),
+	ADDSUB_OP(6),
+	MULTDIV_OP(7),
+	ATTRIB_OP(8),
+	TERM(9),
+	L_PAR(10),
+	R_PAR(11),
 	LOGIC_VALUE(12),
 	LOGIC_OP(13),
 	TYPE(14),
@@ -19,7 +25,8 @@ public enum TokenID {
 	WHILE(23),
 	DECLARE(24),
 	TO(25),
-	EOF(26);
+	EOF(26),
+	ERROR(27);
 	
 	private int valor;
 	

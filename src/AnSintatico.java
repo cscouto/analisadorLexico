@@ -13,6 +13,9 @@ public class AnSintatico {
 			t.print();
 			t = lexico.nextToken();
 		}
+		TabSymbols.getInstance().printTable();
+		
+		ErrorHandler.getInstance().printErros();
 	}
 	
 }

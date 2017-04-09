@@ -49,10 +49,7 @@ public class Token {
 	}
 
 	public void print() {
-		if (this.lexema != null){
-			if (!this.lexema.isEmpty())
-				System.out.println(this.lexema);
-		}
+		System.out.println(this.lexema);
 	}
 	
 }
