@@ -12,7 +12,7 @@ public class TabSymbols {
 		tabela.put("true", new Token(TokenID.LOGIC_VALUE, "true", 0, 0));
 		tabela.put("false", new Token(TokenID.LOGIC_VALUE, "false", 0, 0));
 		tabela.put("not", new Token(TokenID.LOGIC_OP, "not", 0, 0));
-		tabela.put("and", new Token(TokenID.LOGIC_OP, "true", 0, 0));
+		tabela.put("and", new Token(TokenID.LOGIC_OP, "and", 0, 0));
 		tabela.put("or", new Token(TokenID.LOGIC_OP, "or", 0, 0));
 		tabela.put("bool", new Token(TokenID.TYPE, "bool", 0, 0));
 		tabela.put("text", new Token(TokenID.TYPE, "text", 0, 0));

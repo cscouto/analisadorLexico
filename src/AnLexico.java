@@ -79,8 +79,7 @@ public class AnLexico {
 							
 							trataErros(dados, lin, col);
 							
-							token.setTokenCode(TokenID.ERROR);
-							token.setLexema(dados.toString());
+							token = null;
 							return token;
 						}
 					}
@@ -146,9 +145,7 @@ public class AnLexico {
 						fileHandler.resetLastChar();
 						
 						trataErros(dados, lin, col);
-						
-						token.setTokenCode(TokenID.ERROR);
-						token.setLexema(dados.toString());
+						token =  null;
 						return token;
 					}
 				} else if (ch == 'd') {
@@ -163,9 +160,7 @@ public class AnLexico {
 						fileHandler.resetLastChar();
 						
 						trataErros(dados, lin, col);
-						
-						token.setTokenCode(TokenID.ERROR);
-						token.setLexema(dados.toString());
+						token = null;
 						return token;
 					}
 				} else {
@@ -174,8 +169,7 @@ public class AnLexico {
 					
 					trataErros(dados, lin, col);
 					
-					token.setTokenCode(TokenID.ERROR);
-					token.setLexema(dados.toString());
+					token = null;
 					return token;
 				}
 			}else
@@ -208,8 +202,7 @@ public class AnLexico {
 					
 					trataErros(dados, lin, col);
 					
-					token.setTokenCode(TokenID.ERROR);
-					token.setLexema(dados.toString());
+					token = null;
 					return token;
 				}
 			}else
@@ -235,8 +228,7 @@ public class AnLexico {
 				return token;
 			} else {
 				trataErros(dados, lin, col);
-				token.setTokenCode(TokenID.ERROR);
-				token.setLexema(dados.toString());
+				token = null;
 				return token;
 			}
  
