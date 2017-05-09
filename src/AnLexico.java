@@ -42,8 +42,25 @@ public class AnLexico {
 					ch = fileHandler.getNextChar();
 					if (ch==':'){
 						//comentario correto
-						ch = fileHandler.getNextChar();
+						token = null;
+						return token;
+					}else{
+						// erro lexico
+						fileHandler.resetLastChar();
+						
+						trataErros(dados, lin, col);
+						
+						token = null;
+						return token;
 					}
+				}else{
+					// erro lexico
+					fileHandler.resetLastChar();
+					
+					trataErros(dados, lin, col);
+					
+					token = null;
+					return token;
 				}
 			}
 			

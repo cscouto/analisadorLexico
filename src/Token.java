@@ -51,8 +51,9 @@ public class Token {
 	}
 
 	public void print() {
-		System.out.print(this.lexema);
-		System.out.println(" "+this.tokenCode.name());
+		System.out.print("TK : "+this.tokenCode.name()+"("+this.col+","+this.lin+") ");
+		System.out.println(this.lexema);
+		
 	}
 	
 }
