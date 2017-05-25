@@ -14,7 +14,37 @@ public class AnSintatico {
 		}
 		while (t.getTokenCode() != TokenID.EOF){
 			t.print();
-			t = lexico.nextToken();
+			if (t.getTokenCode() == TokenID.PROGRAM){
+				//TODO valida token
+				t = lexico.nextToken();
+				if (t.getTokenCode() == TokenID.ID){
+					//TODO valida token
+					t = lexico.nextToken();
+					if (t.getTokenCode() == TokenID.TERM){
+						//TODO valida token
+						processaBLOCO();
+						t = lexico.nextToken();
+						if (t.getTokenCode() == TokenID.END_PROG){
+							//TODO valida token
+							t = lexico.nextToken();
+							if (t.getTokenCode() == TokenID.TERM){
+								//TODO valida token
+							}else{
+								//TODO tratar erro
+							}
+						}else{
+							//TODO tratar erro
+						}
+					}else{
+						//TODO tratar erro
+					}
+				}else{
+					//TODO tratar erro
+				}
+			}else{
+				//TODO tratar erro
+			}
+			
 			while (t == null){
 				t = lexico.nextToken();
 			}
@@ -22,6 +52,38 @@ public class AnSintatico {
 		TabSymbols.getInstance().printTable();
 		
 		ErrorHandler.getInstance().printErros();
+	}
+
+	private void processaBLOCO() {
+		Token t = lexico.nextToken();
+		if (t.getTokenCode() == TokenID.BEGIN){
+			//TODO valida token
+			processaCMDS();
+			t = lexico.nextToken();
+			if (t.getTokenCode() == TokenID.END){
+				//TODO valida token
+			}else{
+				//TODO tratar erro
+			}
+		}else{
+			processaCMD();
+		}
+	}
+
+	private void processaCMD() {
+		Token t = lexico.nextToken();
+		
+	}
+
+	private void processaCMDS() {
+		Token t = lexico.nextToken();
+		if (t.getTokenCode() == TokenID.DECLARE){
+			//TODO valida toke
+		}else if (t.getTokenCode() == TokenID.IF){
+			
+		}else if (t.getTokenCode() == TokenID.ID){
+			
+		}
 	}
 	
 }
