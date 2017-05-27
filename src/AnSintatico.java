@@ -196,8 +196,95 @@ public class AnSintatico {
 			//TODO error
 		}
 	}
-
+	
+	//l_par EXP_N r_par //id ATR_ID  //num_float ATR_VN	 //num_int ATR_VN //literal
 	private void processaATRIB2() {
+		Token t =  lexico.nextToken();
+		switch(t.getTokenCode()){
+		case L_PAR:
+			//TODO valida token
+			processaEXP_N();
+			t = lexico.nextToken();
+			if (t.getTokenCode() == TokenID.R_PAR){
+				//TODO valida token
+			}else{
+				//TODO error
+			}
+			break;
+		case ID:
+			//TODO valida token
+			processaATR_ID();
+			break;
+		case NUM_FLOAT:
+			bufferToken = t;
+			processaVAL_N();
+			processaATR_VN();
+			break;
+		case NUM_INT:
+			bufferToken = t;
+			processaVAL_N();
+			processaATR_VN();
+			break;
+		case LITERAL:
+			//TODO valida token
+			break;
+		default:
+			//TODO ERROR
+			break;
+		}
+	}
+
+	//r_par AT_VN2 /while AT_VN2 /to /id AT_VN2	/for AT_VN2 /multdiv_op EXP_N  AT_VN2 /addsub_op EXP_N  AT_VN2 /rel_op AT_VN2 /term /if  AT_VN2 /declare AT_VN2 /begin AT_VN2
+	private void processaATR_VN() {
+		Token t =  lexico.nextToken();
+		switch(t.getTokenCode()){
+			case R_PAR:
+				break;
+			case WHILE:
+				break;
+			case TO:
+				break;
+			case ID:
+				break;
+			case FOR:
+				break;
+			case MULTDIV_OP:
+				break;
+			case ADDSUB_OP:
+				break;
+			case REL_OP:
+				break;
+			case TERM:
+				break;
+			case IF:
+				break;
+			case DECLARE:
+				break;
+			case BEGIN:
+				break;
+			default:
+				break;
+		}
+		
+	}
+
+	private void processaVAL_N() {
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
+			t = lexico.nextToken();
+		}
+		
+	}
+
+	private void processaATR_ID() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void processaEXP_N() {
 		// TODO Auto-generated method stub
 		
 	}
