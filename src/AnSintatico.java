@@ -545,17 +545,113 @@ public class AnSintatico {
 			t = bufferToken;
 			bufferToken = null;
 		}
-	}
-
-	private void processaCMDS() {
-		Token t = lexico.nextToken();
-		if (t.getTokenCode() == TokenID.DECLARE) {
-			// TODO valida toke
-		} else if (t.getTokenCode() == TokenID.IF) {
-
-		} else if (t.getTokenCode() == TokenID.ID) {
-
+		if (t.getTokenCode() == TokenID.FOR){
+			//TODO valida token
+			t = lexico.nextToken();
+			if (t.getTokenCode() == TokenID.ID){
+				//TODO valida token
+				t = lexico.nextToken();
+				if (t.getTokenCode() == TokenID.ATTRIB_OP){
+					//TODO valida token
+					processaEXP_N();
+					t = lexico.nextToken();
+					if (t.getTokenCode() == TokenID.TO){
+						//TODO valida token
+						processaEXP_N();
+						processaBLOCO();
+					}
+				}
+			}
 		}
 	}
 
+	//while l_par EXP_L r_par BLOCO CMDS | id IDFLW	| for id attrib_op EXP_N to EXP_N BLOCO CMDS | else |if IFLLW | declare DCFLW |end | end_prog 
+	private void processaCMDS() {
+		Token t = lexico.nextToken();
+		switch (t.getTokenCode()){
+			case DECLARE:
+				//TODO valida token
+				processaDCFLW();
+				break;
+			case IF:
+				//TODO valida token
+				processaIFFLW();
+				break;
+			case WHILE:
+				//TODO valida token
+				bufferToken =  t;
+				processaREPW();
+				processaCMDS();
+				break;
+			case FOR:
+				//TODO valida token
+				bufferToken =  t;
+				processaREPF();
+				processaCMDS();
+				break;
+			case ID:
+				//TODO valida token
+				processaIDFLW();
+				break;
+			case ELSE:
+				//TODO valida token
+				break;
+			case END:
+				//TODO valida token
+				break;
+			case END_PROG:
+				//TODO valida token
+				break;
+			default:
+				//TODO error
+				break;
+		}
+	}
+	
+	//attrib_op ATRIB2 term CMDS
+	private void processaIDFLW() {
+		Token t = lexico.nextToken();
+		if (t.getTokenCode() == TokenID.ATTRIB_OP){
+			//TODO valida token
+			processaATRIB2();
+			t = lexico.nextToken();
+			if (t.getTokenCode() == TokenID.TERM){
+				//TODO valida token
+				processaCMDS();
+			}
+		}
+	}
+	
+	// l_par EXP_L r_par then BLOCO CMDS
+	private void processaIFFLW() {
+		Token t = lexico.nextToken();
+		if (t.getTokenCode() == TokenID.L_PAR){
+			//TODO valida token
+			processaEXP_L();
+			t = lexico.nextToken();
+			if (t.getTokenCode() == TokenID.R_PAR){
+				//TODO valida token
+				t = lexico.nextToken();
+				if (t.getTokenCode() == TokenID.THEN){
+					//TODO valida token
+					processaBLOCO();
+					processaCMDS();
+				}
+			}
+		}
+	}
+	//id type term CMDS
+	private void processaDCFLW() {
+		Token t = lexico.nextToken();
+		if (t.getTokenCode() == TokenID.ID){
+			//TODO valida token
+			if (t.getTokenCode() == TokenID.TYPE){
+				//TODO valida token
+				if (t.getTokenCode() == TokenID.TERM){
+					//TODO valida token
+					processaCMDS();
+				}
+			}
+		}
+	}
 }
