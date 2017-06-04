@@ -40,7 +40,7 @@ public class AnSintatico {
 						trataErros(t.getLexema(), "END_PROG was expected :", t.getLin(), t.getCol());
 					}
 				} else {
-					trataErros(t.getLexema(), "TERM was expected ::", t.getLin(), t.getCol());
+					trataErros(t.getLexema(), "TERM was expected :", t.getLin(), t.getCol());
 				}
 			} else {
 				trataErros(t.getLexema(), "ID was expected :", t.getLin(), t.getCol());
@@ -247,6 +247,7 @@ public class AnSintatico {
 				t = lexico.nextToken();
 			}
 			if (t.getTokenCode() == TokenID.R_PAR) {
+				processaEXP_N2();
 			} else {
 				trataErros(t.getLexema(), ") was expected :", t.getLin(), t.getCol());
 			}
@@ -268,6 +269,8 @@ public class AnSintatico {
 			processaATR_VN();
 			break;
 		case LITERAL:
+			break;
+		case LOGIC_VALUE:
 			break;
 		default:
 			trataErros(t.getLexema(), "TOKEN was unexpected :", t.getLin(), t.getCol());
@@ -365,8 +368,6 @@ public class AnSintatico {
 		}
 	}
 
-	// r_par | while | to | id | for | multdiv_op EXP_N | addsub_op EXP_N |
-	// rel_op | term | if | declare | begin
 	private void processaEXP_N2() {
 		Token t;
 		if (bufferToken != null) {
@@ -398,6 +399,9 @@ public class AnSintatico {
 			processaEXP_N();
 			break;
 		case REL_OP:
+			bufferToken = t;
+			break;
+		case LOGIC_OP:
 			bufferToken = t;
 			break;
 		case TERM:
@@ -476,6 +480,7 @@ public class AnSintatico {
 		}
 		if (t.getTokenCode() == TokenID.REL_OP) {
 			processaEXP_N();
+			processaEXP_L3();
 		} else if (t.getTokenCode() == TokenID.R_PAR) {
 			bufferToken = t;
 			processaEXP_L3();
@@ -530,7 +535,7 @@ public class AnSintatico {
 				t = lexico.nextToken();
 			}
 			if (t.getTokenCode() == TokenID.R_PAR) {
-
+				processaEXP_N2();
 			} else {
 				trataErros(t.getLexema(), ") was expected :", t.getLin(), t.getCol());
 			}
@@ -539,6 +544,7 @@ public class AnSintatico {
 			if (!t.isDeclared()){
 				trataErros(t.getLexema(), "A ID NAO foi declarada anteriormente: ", t.getLin(), t.getCol());
 			}
+			processaEXP_N2();
 			break;
 		case NUM_FLOAT:
 			bufferToken = t;
@@ -780,6 +786,7 @@ public class AnSintatico {
 			break;
 		case IF:
 			processaIFFLW();
+			processaCMDS();
 			break;
 		case WHILE:
 
@@ -857,7 +864,7 @@ public class AnSintatico {
 				t = lexico.nextToken();
 				if (t.getTokenCode() == TokenID.THEN) {
 					processaBLOCO();
-					processaCMDS();
+					processaCNDB();
 				} else {
 					trataErros(t.getLexema(), "THEN was expected :", t.getLin(), t.getCol());
 				}

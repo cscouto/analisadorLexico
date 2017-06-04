@@ -71,33 +71,56 @@ public class AnLexico {
 			
 			// NUM_INT
 			if (Character.isDigit(ch)) {
+				
 				token.setTokenCode(TokenID.NUM_INT);
 				ch = fileHandler.getNextChar();
-				while (Character.isDigit(ch)) {
+				if (ch == '.') {
 					dados.append(ch);
 					ch = fileHandler.getNextChar();
-
-					// NUM_FLOAT
-					if (ch == '.') {
+					if (Character.isDigit(ch)) {
+						while (Character.isDigit(ch) || ch == 'E' || ch == '+') {
+							dados.append(ch);
+							ch = fileHandler.getNextChar();
+						}
+						fileHandler.resetLastChar();
+						token.setTokenCode(TokenID.NUM_FLOAT);
+						token.setLexema(dados.toString());
+						return token;
+					} else {
+						// erro lexico
+						fileHandler.resetLastChar();
+						
+						trataErros(dados, lin, col);
+						
+						token = null;
+						return nextToken();
+					}
+				}else {
+					while (Character.isDigit(ch)) {
 						dados.append(ch);
 						ch = fileHandler.getNextChar();
-						if (Character.isDigit(ch)) {
-							while (Character.isDigit(ch)) {
-								dados.append(ch);
-								ch = fileHandler.getNextChar();
+						// NUM_FLOAT
+						if (ch == '.') {
+							dados.append(ch);
+							ch = fileHandler.getNextChar();
+							if (Character.isDigit(ch)) {
+								while (Character.isDigit(ch)|| ch == 'E' || ch == '+') {
+									dados.append(ch);
+									ch = fileHandler.getNextChar();
+								}
+								fileHandler.resetLastChar();
+								token.setTokenCode(TokenID.NUM_FLOAT);
+								token.setLexema(dados.toString());
+								return token;
+							} else {
+								// erro lexico
+								fileHandler.resetLastChar();
+								
+								trataErros(dados, lin, col);
+								
+								token = null;
+								return nextToken();
 							}
-							fileHandler.resetLastChar();
-							token.setTokenCode(TokenID.NUM_FLOAT);
-							token.setLexema(dados.toString());
-							return token;
-						} else {
-							// erro lexico
-							fileHandler.resetLastChar();
-							
-							trataErros(dados, lin, col);
-							
-							token = null;
-							return nextToken();
 						}
 					}
 				}

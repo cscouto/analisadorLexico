@@ -1,11 +1,37 @@
-program teste ;
-	begin
-		declare casa int ;  
-		:{suhsuahs}:
-		if ( true $le 10.50 + casa  ) then 
-			if ( true $le 10.50 + casa ) then begin 
-			end 
-		else begin 
-		end
-	end
-end_prog; 
+:{
+    Este programa eh apenas um teste para o projeto
+    de construcao de compiladores.
+
+    Este eh um teste que deve passar. Entretanto, nao possui todas as possibilidades
+    de construcoes possiveis. Os grupos devem variar o tema e, principalmente,
+    incluir situacoes de erro.
+}:
+
+program Teste1;
+   begin
+      declare salario float;
+      declare bonus float;
+      declare controle int;
+      declare nome text;
+      declare _result bool;
+      declare test_Var01 text;
+      declare testVar02_ text;
+      nome <- 'Luke Skywalker';
+
+      :{ alguns comentarios soh para dar graca }:
+      if (salario $le 6000) then begin
+         declare i int;
+         for i <- 0 to controle begin
+            salario <- (bonus + 3.002E+10)/salario;
+         end
+      end
+
+      else begin
+               while(salario $gt 10000 or bonus $lt salario) begin
+                  salario <- (salario + bonus);
+                  bonus <- (bonus - ((5 * bonus)/100));
+               end
+               _result <- true;
+            end
+   end
+end_prog;
