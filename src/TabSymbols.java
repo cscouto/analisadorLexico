@@ -29,7 +29,6 @@ public class TabSymbols {
 		tabela.put("while", new Token(TokenID.WHILE, "while", 0, 0));
 		tabela.put("declare", new Token(TokenID.DECLARE, "declare", 0, 0));
 		tabela.put("to", new Token(TokenID.TO, "to", 0, 0));
-		tabela.put("term", new Token(TokenID.TERM, "term", 0, 0));
 	}
 
 	public static TabSymbols getInstance() {

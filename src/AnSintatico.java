@@ -1,5 +1,6 @@
 //Tiago Henrique Do Couto
 //Caique Souza
+
 public class AnSintatico {
 	private AnLexico lexico;
 	private Token bufferToken;
@@ -11,56 +12,65 @@ public class AnSintatico {
 	public void start() {
 		processaS();
 		// TabSymbols.getInstance().printTable();
-		// ErrorHandler.getInstance().printErros();
+		 ErrorHandler.getInstance().printErros();
 	}
 
-	//program id term BLOCO end_prog term
+	// program id term BLOCO end_prog term
 	private void processaS() {
 		Token t = lexico.nextToken();
 		if (t.getTokenCode() == TokenID.PROGRAM) {
-			// TODO valida token
 			t = lexico.nextToken();
 			if (t.getTokenCode() == TokenID.ID) {
-				// TODO valida token
 				t = lexico.nextToken();
 				if (t.getTokenCode() == TokenID.TERM) {
-					// TODO valida token
 					processaBLOCO();
-					t = lexico.nextToken();
+					if (bufferToken != null) {
+						t = bufferToken;
+						bufferToken = null;
+					} else {
+						t = lexico.nextToken();
+					}
 					if (t.getTokenCode() == TokenID.END_PROG) {
-						// TODO valida token
 						t = lexico.nextToken();
 						if (t.getTokenCode() == TokenID.TERM) {
-							// TODO valida token
 						} else {
-							// TODO tratar erro
+							trataErros(t.getLexema(), "TERM was expected :", t.getLin(), t.getCol());
 						}
 					} else {
-						// TODO tratar erro
+						trataErros(t.getLexema(), "END_PROG was expected :", t.getLin(), t.getCol());
 					}
 				} else {
-					// TODO tratar erro
+					trataErros(t.getLexema(), "TERM was expected ::", t.getLin(), t.getCol());
 				}
 			} else {
-				// TODO tratar erro
+				trataErros(t.getLexema(), "ID was expected :", t.getLin(), t.getCol());
 			}
 		} else {
-			// TODO tratar erro
+			trataErros(t.getLexema(), "PROGRAM was expected :", t.getLin(), t.getCol());
 		}
 	}
 
 	// begin CMDS end
 	// CMD
 	private void processaBLOCO() {
-		Token t = lexico.nextToken();
-		if (t.getTokenCode() == TokenID.BEGIN) {
-			// TODO valida token
-			processaCMDS();
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
 			t = lexico.nextToken();
-			if (t.getTokenCode() == TokenID.END) {
-				// TODO valida token
+		}
+		if (t.getTokenCode() == TokenID.BEGIN) {
+			processaCMDS();
+			if (bufferToken != null) {
+				t = bufferToken;
+				bufferToken = null;
 			} else {
-				// TODO tratar erro
+				t = lexico.nextToken();
+			}
+			if (t.getTokenCode() == TokenID.END) {
+			} else {
+				trataErros(t.getLexema(), "END was expected :", t.getLin(), t.getCol());
 			}
 		} else {
 			bufferToken = t;
@@ -95,7 +105,7 @@ public class AnSintatico {
 			processaCOND();
 			break;
 		default:
-			//TODO ERROR
+			trataErros(t.getLexema(), "TOKEN was unexpected :", t.getLin(), t.getCol());
 			break;
 		}
 	}
@@ -110,70 +120,78 @@ public class AnSintatico {
 			t = lexico.nextToken();
 		}
 		if (t.getTokenCode() == TokenID.IF) {
-			// TODO valida token
 			t = lexico.nextToken();
 			if (t.getTokenCode() == TokenID.L_PAR) {
-				// TODO valida token
 				processaEXP_L();
-				t = lexico.nextToken();
+				if (bufferToken != null) {
+					t = bufferToken;
+					bufferToken = null;
+				} else {
+					t = lexico.nextToken();
+				}
 				if (t.getTokenCode() == TokenID.R_PAR) {
-					// TODO valida token
 					t = lexico.nextToken();
 					if (t.getTokenCode() == TokenID.THEN) {
-						// TODO valida token
 						processaBLOCO();
 						processaCNDB();
-					}else{
-						//TODO error
+					} else {
+						trataErros(t.getLexema(), "THEN was expected :", t.getLin(), t.getCol());
 					}
-				}else{
-					//TODO error
+				} else {
+					trataErros(t.getLexema(), ") was expected :", t.getLin(), t.getCol());
 				}
-			}else{
-				//TODO error
+			} else {
+				trataErros(t.getLexema(), "( was expected :", t.getLin(), t.getCol());
 			}
-		}else{
-			//TODO error
+		} else {
+			trataErros(t.getLexema(), "IF was expected :", t.getLin(), t.getCol());
 		}
 	}
-	
-	//while	id 	for	else BLOCO	if	declare end	end_prog 
+
+	// while id for else BLOCO if declare end end_prog
+	//end end_prog declare if id for while else
+
 	private void processaCNDB() {
-		Token t = lexico.nextToken();
-		switch(t.getTokenCode()){
+		Token t ;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
+			t = lexico.nextToken();
+		}
+		switch (t.getTokenCode()) {
 		case ELSE:
-			//TODO valida token
+			bufferToken = t;
 			processaBLOCO();
 			break;
 		case WHILE:
-			//TODO valida token
+			bufferToken = t;
 			break;
 		case ID:
-			//TODO valida token
+			bufferToken = t;
 			break;
 		case FOR:
-			//TODO valida token
+			bufferToken = t;
 			break;
 		case IF:
-			//TODO valida token
+			bufferToken = t;
 			break;
 		case DECLARE:
-			//TODO valida token
+			bufferToken = t;
 			break;
 		case END:
-			//TODO valida token
+			bufferToken = t;
 			break;
 		case END_PROG:
-			//TODO valida token
+			bufferToken = t;
 			break;
 		default:
-			//TODO error
+			trataErros(t.getLexema(), "TOKEN was unexpected :", t.getLin(), t.getCol());
 			break;
 		}
-
 	}
-	
-	//id attrib_op ATRIB2 term
+
+	// id attrib_op ATRIB2 term
 	private void processaATRIB() {
 		Token t;
 		if (bufferToken != null) {
@@ -182,42 +200,53 @@ public class AnSintatico {
 		} else {
 			t = lexico.nextToken();
 		}
-		if (t.getTokenCode() == TokenID.ID){
-			//TODO valida token
+		if (t.getTokenCode() == TokenID.ID) {
 			t = lexico.nextToken();
-			if (t.getTokenCode() == TokenID.ATTRIB_OP){
-				//TODO valida token;
+			if (t.getTokenCode() == TokenID.ATTRIB_OP) {
 				processaATRIB2();
-				t = lexico.nextToken();
-				if (t.getTokenCode() == TokenID.TERM){
-					//TODO valida token
-				}else{
-					//TODO error
+				if (bufferToken != null) {
+					t = bufferToken;
+					bufferToken = null;
+				} else {
+					t = lexico.nextToken();
 				}
-			}else{
-				//TODO error
+				if (t.getTokenCode() == TokenID.TERM) {
+				} else {
+					trataErros(t.getLexema(), "TERM was expected :", t.getLin(), t.getCol());
+				}
+			} else {
+				trataErros(t.getLexema(), "OPERATOR was expected :", t.getLin(), t.getCol());
 			}
-		}else{
-			//TODO error
+		} else {
+			trataErros(t.getLexema(), "ID was expected :", t.getLin(), t.getCol());
 		}
 	}
-	
-	//l_par EXP_N r_par //id ATR_ID  //num_float ATR_VN	 //num_int ATR_VN //literal
+
+	// l_par EXP_N r_par //id ATR_ID //num_float ATR_VN //num_int ATR_VN
+	// //literal
 	private void processaATRIB2() {
-		Token t =  lexico.nextToken();
-		switch(t.getTokenCode()){
-		case L_PAR:
-			//TODO valida token
-			processaEXP_N();
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
 			t = lexico.nextToken();
-			if (t.getTokenCode() == TokenID.R_PAR){
-				//TODO valida token
-			}else{
-				//TODO error
+		}
+		switch (t.getTokenCode()) {
+		case L_PAR:
+			processaEXP_N();
+			if (bufferToken != null) {
+				t = bufferToken;
+				bufferToken = null;
+			} else {
+				t = lexico.nextToken();
+			}
+			if (t.getTokenCode() == TokenID.R_PAR) {
+			} else {
+				trataErros(t.getLexema(), ") was expected :", t.getLin(), t.getCol());
 			}
 			break;
 		case ID:
-			//TODO valida token
 			processaATR_ID();
 			break;
 		case NUM_FLOAT:
@@ -231,84 +260,159 @@ public class AnSintatico {
 			processaATR_VN();
 			break;
 		case LITERAL:
-			//TODO valida token
 			break;
 		default:
-			//TODO ERROR
+			trataErros(t.getLexema(), "TOKEN was unexpected :", t.getLin(), t.getCol());
 			break;
 		}
 	}
 
 	//
 	private void processaATR_VN() {
-		processaEXP_N2();
-		processaAT_VN2();
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
+			t = lexico.nextToken();
+		}
+		switch (t.getTokenCode()) {
+		case R_PAR:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		case WHILE:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		case TO:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		case ID:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		case FOR:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		case MULTDIV_OP:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		case ADDSUB_OP:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		case REL_OP:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		case TERM:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		case IF:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		case DECLARE:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		case BEGIN:
+			bufferToken = t;
+			processaEXP_N2();
+			break;
+		default:
+			trataErros(t.getLexema(), "TOKEN was unexpected :", t.getLin(), t.getCol());
+			break;
+		}
+		if (t.getTokenCode() == TokenID.REL_OP) {
+			bufferToken = t;
+			processaAT_VN2();
+		} else if (t.getTokenCode() == TokenID.TERM) {
+			bufferToken = t;
+			processaAT_VN2();
+		}
+		
 	}
-	
-	//rel_op EXP_N | term
+
+	// rel_op EXP_N | term
 	private void processaAT_VN2() {
-		Token t = lexico.nextToken();
-		if (t.getTokenCode() == TokenID.REL_OP){
-			//TODO valida token
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
+			t = lexico.nextToken();
+		}
+		if (t.getTokenCode() == TokenID.REL_OP) {
 			processaEXP_N();
-		}else if (t.getTokenCode() == TokenID.TERM){
-			//TODO valida token
-		}else{
-			//TODO erro
+		} else if (t.getTokenCode() == TokenID.TERM) {
+			bufferToken = t;
+		} else {
+			trataErros(t.getLexema(), "TERM was expected :", t.getLin(), t.getCol());
 		}
 	}
 
-	//r_par | while | to | id | for | multdiv_op EXP_N | addsub_op EXP_N | rel_op |	term | if |	declare | begin 
+	// r_par | while | to | id | for | multdiv_op EXP_N | addsub_op EXP_N |
+	// rel_op | term | if | declare | begin
 	private void processaEXP_N2() {
-		Token t =  lexico.nextToken();
-		switch(t.getTokenCode()){
-			case R_PAR:
-				//TODO valida token
-				break;
-			case WHILE:
-				//TODO valida token
-				break;
-			case TO:
-				//TODO valida token
-				break;
-			case ID:
-				//TODO valida token
-				break;
-			case FOR:
-				//TODO valida token
-				break;
-			case MULTDIV_OP:
-				//TODO valida token
-				bufferToken = t;
-				processaEXP_N();
-				break;
-			case ADDSUB_OP:
-				//TODO valida token
-				bufferToken = t;
-				processaEXP_N();
-				break;
-			case REL_OP:
-				//TODO valida token
-				break;
-			case TERM:
-				//TODO valida token
-				break;
-			case IF:
-				//TODO valida token
-				break;
-			case DECLARE:
-				//TODO valida token
-				break;
-			case BEGIN:
-				//TODO valida token
-				break;
-			default:
-				//TODO ERROR
-				break;
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
+			t = lexico.nextToken();
+		}
+		switch (t.getTokenCode()) {
+		case R_PAR:
+			bufferToken = t;
+			break;
+		case WHILE:
+			bufferToken = t;
+			break;
+		case TO:
+			bufferToken = t;
+			break;
+		case ID:
+			bufferToken = t;
+			break;
+		case FOR:
+			bufferToken = t;
+			break;
+		case MULTDIV_OP:
+			bufferToken = t;
+			processaEXP_N();
+			break;
+		case ADDSUB_OP:
+			bufferToken = t;
+			processaEXP_N();
+			break;
+		case REL_OP:
+			bufferToken = t;
+			break;
+		case TERM:
+			bufferToken = t;
+			break;
+		case IF:
+			bufferToken = t;
+			break;
+		case DECLARE:
+			bufferToken = t;
+			break;
+		case BEGIN:
+			bufferToken = t;
+			break;
+		default:
+			trataErros(t.getLexema(), "TOKEN was unexpected :", t.getLin(), t.getCol());
+			break;
 		}
 	}
-	
-	//num_int | num_float
+
+	// num_int | num_float
 	private void processaVAL_N() {
 		Token t;
 		if (bufferToken != null) {
@@ -317,33 +421,70 @@ public class AnSintatico {
 		} else {
 			t = lexico.nextToken();
 		}
-		if (t.getTokenCode() == TokenID.NUM_FLOAT){
-			//TODO valida token
-		}else if (t.getTokenCode() == TokenID.NUM_FLOAT){
-			//TODO valida token
-		}else{
-			//TODO error
-		}
-	}
-	
-	//expL2
-	private void processaATR_ID() {
-		processaEXP_L2();
-	}
-	
-	//rel_op EXP_N | EXP_L3
-	private void processaEXP_L2() {
-		Token t = lexico.nextToken();
-		if (t.getTokenCode() == TokenID.REL_OP){
-			//TODO valida token
-			processaEXP_N();
-		}else{
-			bufferToken = t;
-			processaEXP_L3();
+		if (t.getTokenCode() == TokenID.NUM_FLOAT) {
+
+		} else if (t.getTokenCode() == TokenID.NUM_FLOAT) {
+
+		} else {
+			trataErros(t.getLexema(), "FLOAT was expected :", t.getLin(), t.getCol());
 		}
 	}
 
-	//r_par | logic_op EXP_L | term 
+	// expL2
+	private void processaATR_ID() {
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
+			t = lexico.nextToken();
+		}
+		if (t.getTokenCode() == TokenID.TERM){
+			bufferToken = t;
+		}else if (t.getTokenCode() == TokenID.REL_OP){
+			bufferToken = t;
+			processaEXP_L2();
+		} else if (t.getTokenCode() == TokenID.R_PAR) {
+			bufferToken = t;
+			processaEXP_L2();
+		} else if (t.getTokenCode() == TokenID.LOGIC_OP) {
+			bufferToken = t;
+			processaEXP_L2();
+		} else if (t.getTokenCode() == TokenID.TERM) {
+			bufferToken = t;
+			processaEXP_L2();
+		}else{
+			trataErros(t.getLexema(), "TOKEN was unexpected", t.getLin(), t.getCol());
+		}
+		
+	}
+
+	// rel_op EXP_N | EXP_L3
+	private void processaEXP_L2() {
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
+			t = lexico.nextToken();
+		}
+		if (t.getTokenCode() == TokenID.REL_OP) {
+			processaEXP_N();
+		} else if (t.getTokenCode() == TokenID.R_PAR) {
+			bufferToken = t;
+			processaEXP_L3();
+		} else if (t.getTokenCode() == TokenID.LOGIC_OP) {
+			bufferToken = t;
+			processaEXP_L3();
+		} else if (t.getTokenCode() == TokenID.TERM) {
+			bufferToken = t;
+			processaEXP_L3();
+		}else{
+			trataErros(t.getLexema(), "TOKEN was unexpected", t.getLin(), t.getCol());
+		}
+	}
+
+	// r_par | logic_op EXP_L | term
 	private void processaEXP_L3() {
 		Token t;
 		if (bufferToken != null) {
@@ -352,18 +493,18 @@ public class AnSintatico {
 		} else {
 			t = lexico.nextToken();
 		}
-		if (t.getTokenCode() == TokenID.R_PAR){
-			//TODO valida token
-		}else if (t.getTokenCode() == TokenID.LOGIC_OP){
-			//TODO valida token
+		if (t.getTokenCode() == TokenID.R_PAR) {
+			bufferToken = t;
+		} else if (t.getTokenCode() == TokenID.LOGIC_OP) {
 			processaEXP_L();
-		}else if (t.getTokenCode() == TokenID.TERM){
-			//TODO valida token
-		}else{
-			//TODO error
+		} else if (t.getTokenCode() == TokenID.TERM) {
+			bufferToken = t;
+		} else {
+			trataErros(t.getLexema(), "TERM was expected :", t.getLin(), t.getCol());
 		}
 	}
-	//l_par EXP_N r_par | id | num_float EXP_N2 | num_int EXP_N2
+
+	// l_par EXP_N r_par | id | num_float EXP_N2 | num_int EXP_N2
 	private void processaEXP_N() {
 		Token t;
 		if (bufferToken != null) {
@@ -372,37 +513,42 @@ public class AnSintatico {
 		} else {
 			t = lexico.nextToken();
 		}
-		switch(t.getTokenCode()){
-			case L_PAR:
-				//TODO valida token
-				processaEXP_N();
+		switch (t.getTokenCode()) {
+		case L_PAR:
+
+			processaEXP_N();
+			if (bufferToken != null) {
+				t = bufferToken;
+				bufferToken = null;
+			} else {
 				t = lexico.nextToken();
-				if (t.getTokenCode()==TokenID.R_PAR){
-					//TODO valida token
-				}else{
-					//TODO error
-				}
-				break;
-			case ID:
-				//TODO valida token
-				break;
-			case NUM_FLOAT:
-				bufferToken = t;
-				processaVAL_N();
-				processaEXP_N2();
-				break;
-			case NUM_INT:
-				bufferToken = t;
-				processaVAL_N();
-				processaEXP_N2();
-				break;
-			default:
-				//TODO error
-				break;
+			}
+			if (t.getTokenCode() == TokenID.R_PAR) {
+
+			} else {
+				trataErros(t.getLexema(), ") was expected :", t.getLin(), t.getCol());
+			}
+			break;
+		case ID:
+
+			break;
+		case NUM_FLOAT:
+			bufferToken = t;
+			processaVAL_N();
+			processaEXP_N2();
+			break;
+		case NUM_INT:
+			bufferToken = t;
+			processaVAL_N();
+			processaEXP_N2();
+			break;
+		default:
+			trataErros(t.getLexema(), "TOKEN was unexpected :", t.getLin(), t.getCol());
+			break;
 		}
 	}
 
-	//declare id type term 
+	// declare id type term
 	private void processaDECL() {
 		Token t;
 		if (bufferToken != null) {
@@ -411,30 +557,31 @@ public class AnSintatico {
 		} else {
 			t = lexico.nextToken();
 		}
-		if (t.getTokenCode() == TokenID.DECLARE){
-			//TODO valida token
+		if (t.getTokenCode() == TokenID.DECLARE) {
+
 			t = lexico.nextToken();
-			if (t.getTokenCode() == TokenID.ID){
-				//TODO valida token
+			if (t.getTokenCode() == TokenID.ID) {
+
 				t = lexico.nextToken();
-				if (t.getTokenCode() == TokenID.TYPE){
-					//TODO valida token
+				if (t.getTokenCode() == TokenID.TYPE) {
+
 					t = lexico.nextToken();
-					if (t.getTokenCode() == TokenID.TERM){
-						//TODO valida token
-					}else{
-						//TODO error
+					if (t.getTokenCode() == TokenID.TERM) {
+
+					} else {
+						trataErros(t.getLexema(), "TERM was expected :", t.getLin(), t.getCol());
 					}
-				}else{
-					//TODO error
+				} else {
+					trataErros(t.getLexema(), "TYPE was expected :", t.getLin(), t.getCol());
 				}
-			}else{
-				//TODO error
+			} else {
+				trataErros(t.getLexema(), "ID was expected :", t.getLin(), t.getCol());
 			}
-		}else{
-			//TODO error
+		} else {
+			trataErros(t.getLexema(), "DECLARE was expected :", t.getLin(), t.getCol());
 		}
 	}
+
 	private void processaREP() {
 		Token t;
 		if (bufferToken != null) {
@@ -447,10 +594,10 @@ public class AnSintatico {
 			bufferToken = t;
 			processaREPF();
 		} else if (t.getTokenCode() == TokenID.WHILE) {
-			bufferToken = t;	
+			bufferToken = t;
 			processaREPW();
 		} else {
-			// TODO ERROR
+			trataErros(t.getLexema(), "WHILE was expected :", t.getLin(), t.getCol());
 		}
 	}
 
@@ -464,79 +611,101 @@ public class AnSintatico {
 			bufferToken = null;
 		}
 		if (t.getTokenCode() == TokenID.WHILE) {
-			// TODO valida token
 			t = lexico.nextToken();
 			if (t.getTokenCode() == TokenID.L_PAR) {
-				// TODO valida token
 				processaEXP_L();
-				t = lexico.nextToken();
+				if (bufferToken != null) {
+					t = bufferToken;
+					bufferToken = null;
+				} else {
+					t = lexico.nextToken();
+				}
 				if (t.getTokenCode() == TokenID.R_PAR) {
-					// TODO valida token
 					processaBLOCO();
 				} else {
-					// TODO error
+					trataErros(t.getLexema(), ") was expected :", t.getLin(), t.getCol());
 				}
 			} else {
-				// TODO error
+				trataErros(t.getLexema(), "( was expected :", t.getLin(), t.getCol());
 			}
 		} else {
-			// TODO error
+			trataErros(t.getLexema(), "WHILE was expected :", t.getLin(), t.getCol());
 		}
 	}
 
-	//id EXP_L2 | num_float EXP_N2 rel_op EXP_N | num_int EXP_N2 rel_op EXP_N | logic_val EXP_L2 |  l_par EXP_N r_par 
+	// id EXP_L2 | num_float EXP_N2 rel_op EXP_N | num_int EXP_N2 rel_op EXP_N |
+	// logic_val EXP_L2 | l_par EXP_N r_par
 	private void processaEXP_L() {
-		Token t = lexico.nextToken();
-		switch(t.getTokenCode()){
-			case ID:
-				//TODO valida token
-				processaEXP_L2();
-				break;
-			case NUM_FLOAT:
-				bufferToken = t;
-				processaVAL_N();
-				processaEXP_N2();
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
+			t = lexico.nextToken();
+		}
+		switch (t.getTokenCode()) {
+		case ID:
+			processaEXP_L2();
+			break;
+		case NUM_FLOAT:
+			bufferToken = t;
+			processaVAL_N();
+			processaEXP_N2();
+			if (bufferToken != null) {
+				t = bufferToken;
+				bufferToken = null;
+			} else {
 				t = lexico.nextToken();
-				if (t.getTokenCode() == TokenID.REL_OP){
-					//TODO valida token
-					processaEXP_N();
-				}else{
-					//TODO error
-				}
-				break;
-			case NUM_INT:
-				bufferToken = t;
-				processaVAL_N();
-				processaEXP_N2();
-				t = lexico.nextToken();
-				if (t.getTokenCode() == TokenID.REL_OP){
-					//TODO valida token
-					processaEXP_N();
-				}else{
-					//TODO error
-				}
-				break;
-			case LOGIC_VALUE:
-				//TODO valida token 
-				processaEXP_L2();
-				break;
-			case L_PAR:
-				//TODO valida token
+			};
+			if (t.getTokenCode() == TokenID.REL_OP) {
+
 				processaEXP_N();
+			} else {
+				trataErros(t.getLexema(), "REL_OP was expected :", t.getLin(), t.getCol());	
+			}
+			break;
+		case NUM_INT:
+			bufferToken = t;
+			processaVAL_N();
+			processaEXP_N2();
+			if (bufferToken != null) {
+				t = bufferToken;
+				bufferToken = null;
+			} else {
 				t = lexico.nextToken();
-				if (t.getTokenCode() == TokenID.R_PAR){
-					//TODO valida dado
-				}else{
-					//TODO error
-				}
-				break;
-			default:
-				//TODO error
-				break;
+			}
+			if (t.getTokenCode() == TokenID.REL_OP) {
+
+				processaEXP_N();
+			} else {
+				trataErros(t.getLexema(), "REL_OP was expected :", t.getLin(), t.getCol());
+			}
+			break;
+		case LOGIC_VALUE:
+
+			processaEXP_L2();
+			break;
+		case L_PAR:
+
+			processaEXP_N();
+			if (bufferToken != null) {
+				t = bufferToken;
+				bufferToken = null;
+			} else {
+				t = lexico.nextToken();
+			}
+			if (t.getTokenCode() == TokenID.R_PAR) {
+			} else {
+				trataErros(t.getLexema(), ") was expected :", t.getLin(), t.getCol());
+			}
+			break;
+		default:
+			trataErros(t.getLexema(), "TOKEN was unexpected :", t.getLin(), t.getCol());
+			break;
 		}
 	}
-	
-	//for id attrib_op EXP_N to EXP_N BLOCO
+
+	// for id attrib_op EXP_N to EXP_N BLOCO
 	private void processaREPF() {
 		Token t;
 		if (bufferToken == null) {
@@ -545,113 +714,180 @@ public class AnSintatico {
 			t = bufferToken;
 			bufferToken = null;
 		}
-		if (t.getTokenCode() == TokenID.FOR){
-			//TODO valida token
+		if (t.getTokenCode() == TokenID.FOR) {
+
 			t = lexico.nextToken();
-			if (t.getTokenCode() == TokenID.ID){
-				//TODO valida token
+			if (t.getTokenCode() == TokenID.ID) {
+
 				t = lexico.nextToken();
-				if (t.getTokenCode() == TokenID.ATTRIB_OP){
-					//TODO valida token
+				if (t.getTokenCode() == TokenID.ATTRIB_OP) {
+
 					processaEXP_N();
-					t = lexico.nextToken();
-					if (t.getTokenCode() == TokenID.TO){
-						//TODO valida token
+					if (bufferToken != null) {
+						t = bufferToken;
+						bufferToken = null;
+					} else {
+						t = lexico.nextToken();
+					}
+					if (t.getTokenCode() == TokenID.TO) {
+
 						processaEXP_N();
 						processaBLOCO();
+					} else {
+						trataErros(t.getLexema(), "TO was expected :", t.getLin(), t.getCol());
 					}
+				} else {
+					trataErros(t.getLexema(), "OPERATOR was expected :", t.getLin(), t.getCol());
 				}
+			} else {
+				trataErros(t.getLexema(), "ID was expected :", t.getLin(), t.getCol());
 			}
+		} else {
+			trataErros(t.getLexema(), "FOR was expected :", t.getLin(), t.getCol());
 		}
 	}
 
-	//while l_par EXP_L r_par BLOCO CMDS | id IDFLW	| for id attrib_op EXP_N to EXP_N BLOCO CMDS | else |if IFLLW | declare DCFLW |end | end_prog 
+	// while l_par EXP_L r_par BLOCO CMDS | id IDFLW | for id attrib_op EXP_N to
+	// EXP_N BLOCO CMDS | else |if IFLLW | declare DCFLW |end | end_prog
 	private void processaCMDS() {
-		Token t = lexico.nextToken();
-		switch (t.getTokenCode()){
-			case DECLARE:
-				//TODO valida token
-				processaDCFLW();
-				break;
-			case IF:
-				//TODO valida token
-				processaIFFLW();
-				break;
-			case WHILE:
-				//TODO valida token
-				bufferToken =  t;
-				processaREPW();
-				processaCMDS();
-				break;
-			case FOR:
-				//TODO valida token
-				bufferToken =  t;
-				processaREPF();
-				processaCMDS();
-				break;
-			case ID:
-				//TODO valida token
-				processaIDFLW();
-				break;
-			case ELSE:
-				//TODO valida token
-				break;
-			case END:
-				//TODO valida token
-				break;
-			case END_PROG:
-				//TODO valida token
-				break;
-			default:
-				//TODO error
-				break;
-		}
-	}
-	
-	//attrib_op ATRIB2 term CMDS
-	private void processaIDFLW() {
-		Token t = lexico.nextToken();
-		if (t.getTokenCode() == TokenID.ATTRIB_OP){
-			//TODO valida token
-			processaATRIB2();
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
 			t = lexico.nextToken();
-			if (t.getTokenCode() == TokenID.TERM){
-				//TODO valida token
-				processaCMDS();
-			}
+		}
+		switch (t.getTokenCode()) {
+		case DECLARE:
+
+			processaDCFLW();
+			break;
+		case IF:
+
+			processaIFFLW();
+			break;
+		case WHILE:
+
+			bufferToken = t;
+			processaREPW();
+			processaCMDS();
+			break;
+		case FOR:
+
+			bufferToken = t;
+			processaREPF();
+			processaCMDS();
+			break;
+		case ID:
+
+			processaIDFLW();
+			break;
+		case ELSE:
+
+			break;
+		case END:
+			bufferToken = t;
+			break;
+		case END_PROG:
+
+			break;
+		default:
+			trataErros(t.getLexema(), "TOKEN was unexpected :", t.getLin(), t.getCol());
+			break;
 		}
 	}
-	
+
+	// attrib_op ATRIB2 term CMDS
+	private void processaIDFLW() {
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
+			t = lexico.nextToken();
+		}
+		if (t.getTokenCode() == TokenID.ATTRIB_OP) {
+
+			processaATRIB2();
+			if (bufferToken != null) {
+				t = bufferToken;
+				bufferToken = null;
+			} else {
+				t = lexico.nextToken();
+			}
+			if (t.getTokenCode() == TokenID.TERM) {
+				processaCMDS();
+			} else {
+				trataErros(t.getLexema(), "TERM was unexpected :", t.getLin(), t.getCol());
+			}
+		} else {
+			trataErros(t.getLexema(), "OPERATOR was unexpected :", t.getLin(), t.getCol());
+		}
+	}
+
 	// l_par EXP_L r_par then BLOCO CMDS
 	private void processaIFFLW() {
-		Token t = lexico.nextToken();
-		if (t.getTokenCode() == TokenID.L_PAR){
-			//TODO valida token
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
+			t = lexico.nextToken();
+		}
+		if (t.getTokenCode() == TokenID.L_PAR) {
+
 			processaEXP_L();
 			t = lexico.nextToken();
-			if (t.getTokenCode() == TokenID.R_PAR){
-				//TODO valida token
+			if (t.getTokenCode() == TokenID.R_PAR) {
 				t = lexico.nextToken();
-				if (t.getTokenCode() == TokenID.THEN){
-					//TODO valida token
+				if (t.getTokenCode() == TokenID.THEN) {
 					processaBLOCO();
 					processaCMDS();
+				} else {
+					trataErros(t.getLexema(), "THEN was expected :", t.getLin(), t.getCol());
 				}
+			} else {
+				trataErros(t.getLexema(), ") was unexpected :", t.getLin(), t.getCol());
 			}
+		} else {
+			trataErros(t.getLexema(), "( was unexpected :", t.getLin(), t.getCol());
 		}
 	}
-	//id type term CMDS
+
+	// id type term CMDS
 	private void processaDCFLW() {
-		Token t = lexico.nextToken();
-		if (t.getTokenCode() == TokenID.ID){
-			//TODO valida token
-			if (t.getTokenCode() == TokenID.TYPE){
-				//TODO valida token
-				if (t.getTokenCode() == TokenID.TERM){
-					//TODO valida token
-					processaCMDS();
-				}
-			}
+		Token t;
+		if (bufferToken != null) {
+			t = bufferToken;
+			bufferToken = null;
+		} else {
+			t = lexico.nextToken();
 		}
+		if (t.getTokenCode() == TokenID.ID) {
+
+			if (t.getTokenCode() == TokenID.TYPE) {
+
+				if (t.getTokenCode() == TokenID.TERM) {
+					processaCMDS();
+				} else {
+					trataErros(t.getLexema(), "TERM was unexpected :", t.getLin(), t.getCol());
+				}
+			} else {
+				trataErros(t.getLexema(), "TYPE was unexpected :", t.getLin(), t.getCol());
+			}
+		} else {
+			trataErros(t.getLexema(), "ID was unexpected :", t.getLin(), t.getCol());
+		}
+	}
+	
+	private void trataErros(String dados, String erro, long lin, long col) {
+		StringBuilder erroB = new StringBuilder();
+		erroB.append(erro);
+		erroB.append(dados);
+		erroB.append(" linha: ");
+		erroB.append(lin);
+		erroB.append(" col: ");
+		erroB.append(col);
+		ErrorHandler.getInstance().addErro(erroB.toString());
 	}
 }
