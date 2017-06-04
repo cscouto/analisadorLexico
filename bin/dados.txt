@@ -1,1 +1,11 @@
-program teste ; begin end end_program ;
+program teste ;
+	begin
+		declare casa int ;  
+		:{suhsuahs}:
+		if ( true $le 10.50 + casa  ) then 
+			if ( true $le 10.50 + casa ) then begin 
+			end 
+		else begin 
+		end
+	end
+end_prog; 

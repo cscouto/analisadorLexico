@@ -6,6 +6,7 @@ public class Token {
 	private String lexema; 
 	private long lin; 
 	private long col;
+	private boolean isDeclared = false;
 	
 	public Token (TokenID tokenCode, String lexema, long lin, long col){
 		this.tokenCode 	= tokenCode;
@@ -55,5 +56,10 @@ public class Token {
 		System.out.println(this.lexema);
 		
 	}
-	
+	public boolean isDeclared() {
+		return isDeclared;
+	}
+	public void setIsDeclared(boolean check){
+		isDeclared = check;
+	}
 }

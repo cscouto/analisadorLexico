@@ -19,7 +19,7 @@ public class TabSymbols {
 		tabela.put("int", new Token(TokenID.TYPE, "int", 0, 0));
 		tabela.put("float", new Token(TokenID.TYPE, "float", 0, 0));
 		tabela.put("program", new Token(TokenID.PROGRAM, "program", 0, 0));
-		tabela.put("end_program", new Token(TokenID.END_PROG, "end_program", 0, 0));
+		tabela.put("end_prog", new Token(TokenID.END_PROG, "end_prog", 0, 0));
 		tabela.put("begin", new Token(TokenID.BEGIN, "begin", 0, 0));
 		tabela.put("end", new Token(TokenID.END, "end", 0, 0));
 		tabela.put("if", new Token(TokenID.IF, "if", 0, 0));

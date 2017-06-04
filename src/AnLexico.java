@@ -43,7 +43,7 @@ public class AnLexico {
 					if (ch==':'){
 						//comentario correto
 						token = null;
-						return token;
+						return nextToken();
 					}else{
 						// erro lexico
 						fileHandler.resetLastChar();
@@ -51,7 +51,7 @@ public class AnLexico {
 						trataErros(dados, lin, col);
 						
 						token = null;
-						return token;
+						return nextToken();
 					}
 				}else{
 					// erro lexico
@@ -60,7 +60,7 @@ public class AnLexico {
 					trataErros(dados, lin, col);
 					
 					token = null;
-					return token;
+					return nextToken();
 				}
 			}
 			
@@ -97,7 +97,7 @@ public class AnLexico {
 							trataErros(dados, lin, col);
 							
 							token = null;
-							return token;
+							return nextToken();
 						}
 					}
 				}
@@ -163,7 +163,7 @@ public class AnLexico {
 						
 						trataErros(dados, lin, col);
 						token =  null;
-						return token;
+						return nextToken();
 					}
 				} else if (ch == 'd') {
 					dados.append(ch);
@@ -178,7 +178,7 @@ public class AnLexico {
 						
 						trataErros(dados, lin, col);
 						token = null;
-						return token;
+						return nextToken();
 					}
 				} else {
 					// erro
@@ -187,7 +187,7 @@ public class AnLexico {
 					trataErros(dados, lin, col);
 					
 					token = null;
-					return token;
+					return nextToken();
 				}
 			}else
 
@@ -220,7 +220,7 @@ public class AnLexico {
 					trataErros(dados, lin, col);
 					
 					token = null;
-					return token;
+					return nextToken();
 				}
 			}else
 
@@ -246,7 +246,7 @@ public class AnLexico {
 			} else {
 				trataErros(dados, lin, col);
 				token = null;
-				return token;
+				return nextToken();
 			}
  
 		} catch (IOException e){

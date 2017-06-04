@@ -99,6 +99,9 @@ public class AnSintatico {
 			processaDECL();
 			break;
 		case ID:
+			if (!t.isDeclared()){
+				trataErros(t.getLexema(), "A ID NAO foi declarada anteriormente: ", t.getLin(), t.getCol());
+			}
 			processaATRIB();
 			break;
 		case IF:
@@ -161,7 +164,6 @@ public class AnSintatico {
 		}
 		switch (t.getTokenCode()) {
 		case ELSE:
-			bufferToken = t;
 			processaBLOCO();
 			break;
 		case WHILE:
@@ -201,6 +203,9 @@ public class AnSintatico {
 			t = lexico.nextToken();
 		}
 		if (t.getTokenCode() == TokenID.ID) {
+			if (!t.isDeclared()){
+				trataErros(t.getLexema(), "A ID NAO foi declarada anteriormente: ", t.getLin(), t.getCol());
+			}
 			t = lexico.nextToken();
 			if (t.getTokenCode() == TokenID.ATTRIB_OP) {
 				processaATRIB2();
@@ -247,6 +252,9 @@ public class AnSintatico {
 			}
 			break;
 		case ID:
+			if (!t.isDeclared()){
+				trataErros(t.getLexema(), "A ID NAO foi declarada anteriormente: ", t.getLin(), t.getCol());
+			}
 			processaATR_ID();
 			break;
 		case NUM_FLOAT:
@@ -384,11 +392,9 @@ public class AnSintatico {
 			bufferToken = t;
 			break;
 		case MULTDIV_OP:
-			bufferToken = t;
 			processaEXP_N();
 			break;
 		case ADDSUB_OP:
-			bufferToken = t;
 			processaEXP_N();
 			break;
 		case REL_OP:
@@ -421,12 +427,12 @@ public class AnSintatico {
 		} else {
 			t = lexico.nextToken();
 		}
-		if (t.getTokenCode() == TokenID.NUM_FLOAT) {
+		if (t.getTokenCode() == TokenID.NUM_INT) {
 
 		} else if (t.getTokenCode() == TokenID.NUM_FLOAT) {
 
 		} else {
-			trataErros(t.getLexema(), "FLOAT was expected :", t.getLin(), t.getCol());
+			trataErros(t.getLexema(), "FLOAT or INT was expected :", t.getLin(), t.getCol());
 		}
 	}
 
@@ -530,7 +536,9 @@ public class AnSintatico {
 			}
 			break;
 		case ID:
-
+			if (!t.isDeclared()){
+				trataErros(t.getLexema(), "A ID NAO foi declarada anteriormente: ", t.getLin(), t.getCol());
+			}
 			break;
 		case NUM_FLOAT:
 			bufferToken = t;
@@ -561,7 +569,11 @@ public class AnSintatico {
 
 			t = lexico.nextToken();
 			if (t.getTokenCode() == TokenID.ID) {
-
+				if (t.isDeclared()){
+					trataErros(t.getLexema(), "A ID ja foi declarada anteriormente: ", t.getLin(), t.getCol());
+				}else{
+					t.setIsDeclared(true);
+				}
 				t = lexico.nextToken();
 				if (t.getTokenCode() == TokenID.TYPE) {
 
@@ -645,6 +657,9 @@ public class AnSintatico {
 		}
 		switch (t.getTokenCode()) {
 		case ID:
+			if (!t.isDeclared()){
+				trataErros(t.getLexema(), "A ID NAO foi declarada anteriormente: ", t.getLin(), t.getCol());
+			}
 			processaEXP_L2();
 			break;
 		case NUM_FLOAT:
@@ -718,7 +733,9 @@ public class AnSintatico {
 
 			t = lexico.nextToken();
 			if (t.getTokenCode() == TokenID.ID) {
-
+				if (!t.isDeclared()){
+					trataErros(t.getLexema(), "A ID NAO foi declarada anteriormente: ", t.getLin(), t.getCol());
+				}
 				t = lexico.nextToken();
 				if (t.getTokenCode() == TokenID.ATTRIB_OP) {
 
@@ -759,11 +776,9 @@ public class AnSintatico {
 		}
 		switch (t.getTokenCode()) {
 		case DECLARE:
-
 			processaDCFLW();
 			break;
 		case IF:
-
 			processaIFFLW();
 			break;
 		case WHILE:
@@ -779,17 +794,13 @@ public class AnSintatico {
 			processaCMDS();
 			break;
 		case ID:
-
+			if (!t.isDeclared()){
+				trataErros(t.getLexema(), "A ID NAO foi declarada anteriormente: ", t.getLin(), t.getCol());
+			}
 			processaIDFLW();
-			break;
-		case ELSE:
-
 			break;
 		case END:
 			bufferToken = t;
-			break;
-		case END_PROG:
-
 			break;
 		default:
 			trataErros(t.getLexema(), "TOKEN was unexpected :", t.getLin(), t.getCol());
@@ -818,10 +829,10 @@ public class AnSintatico {
 			if (t.getTokenCode() == TokenID.TERM) {
 				processaCMDS();
 			} else {
-				trataErros(t.getLexema(), "TERM was unexpected :", t.getLin(), t.getCol());
+				trataErros(t.getLexema(), "TERM was expected :", t.getLin(), t.getCol());
 			}
 		} else {
-			trataErros(t.getLexema(), "OPERATOR was unexpected :", t.getLin(), t.getCol());
+			trataErros(t.getLexema(), "OPERATOR was expected :", t.getLin(), t.getCol());
 		}
 	}
 
@@ -835,9 +846,13 @@ public class AnSintatico {
 			t = lexico.nextToken();
 		}
 		if (t.getTokenCode() == TokenID.L_PAR) {
-
 			processaEXP_L();
-			t = lexico.nextToken();
+			if (bufferToken != null) {
+				t = bufferToken;
+				bufferToken = null;
+			} else {
+				t = lexico.nextToken();
+			}
 			if (t.getTokenCode() == TokenID.R_PAR) {
 				t = lexico.nextToken();
 				if (t.getTokenCode() == TokenID.THEN) {
@@ -847,7 +862,7 @@ public class AnSintatico {
 					trataErros(t.getLexema(), "THEN was expected :", t.getLin(), t.getCol());
 				}
 			} else {
-				trataErros(t.getLexema(), ") was unexpected :", t.getLin(), t.getCol());
+				trataErros(t.getLexema(), ") was expected :", t.getLin(), t.getCol());
 			}
 		} else {
 			trataErros(t.getLexema(), "( was unexpected :", t.getLin(), t.getCol());
@@ -864,9 +879,14 @@ public class AnSintatico {
 			t = lexico.nextToken();
 		}
 		if (t.getTokenCode() == TokenID.ID) {
-
+			if (t.isDeclared()){
+				trataErros(t.getLexema(), "A ID ja foi declarada anteriormente: ", t.getLin(), t.getCol());
+			}else{
+				t.setIsDeclared(true);
+			}
+			t = lexico.nextToken();
 			if (t.getTokenCode() == TokenID.TYPE) {
-
+				t = lexico.nextToken();
 				if (t.getTokenCode() == TokenID.TERM) {
 					processaCMDS();
 				} else {
