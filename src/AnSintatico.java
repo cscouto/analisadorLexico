@@ -4,9 +4,12 @@
 public class AnSintatico {
 	private AnLexico lexico;
 	private Token bufferToken;
+	private TabelaPreditiva tabelaPreditiva;
+	Token t;
 
 	public AnSintatico(String filename) {
 		lexico = new AnLexico(filename);
+		tabelaPreditiva = TabelaPreditiva.getInstance();
 	}
 
 	public void start() {
@@ -14,10 +17,11 @@ public class AnSintatico {
 		// TabSymbols.getInstance().printTable();
 		 ErrorHandler.getInstance().printErros();
 	}
+	
 
 	// program id term BLOCO end_prog term
 	private void processaS() {
-		Token t = lexico.nextToken();
+		t = lexico.nextToken();
 		if (t.getTokenCode() == TokenID.PROGRAM) {
 			t = lexico.nextToken();
 			if (t.getTokenCode() == TokenID.ID) {
@@ -53,7 +57,6 @@ public class AnSintatico {
 	// begin CMDS end
 	// CMD
 	private void processaBLOCO() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -80,7 +83,6 @@ public class AnSintatico {
 
 	// DECL | COND | REP | ATRIB
 	private void processaCMD() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -115,7 +117,6 @@ public class AnSintatico {
 
 	// if l_par EXP_L r_par then BLOCO CNDB
 	private void processaCOND() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -155,7 +156,6 @@ public class AnSintatico {
 	//end end_prog declare if id for while else
 
 	private void processaCNDB() {
-		Token t ;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -195,7 +195,6 @@ public class AnSintatico {
 
 	// id attrib_op ATRIB2 term
 	private void processaATRIB() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -230,7 +229,6 @@ public class AnSintatico {
 	// l_par EXP_N r_par //id ATR_ID //num_float ATR_VN //num_int ATR_VN
 	// //literal
 	private void processaATRIB2() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -280,7 +278,6 @@ public class AnSintatico {
 
 	//
 	private void processaATR_VN() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -352,7 +349,6 @@ public class AnSintatico {
 
 	// rel_op EXP_N | term
 	private void processaAT_VN2() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -369,7 +365,6 @@ public class AnSintatico {
 	}
 
 	private void processaEXP_N2() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -424,7 +419,6 @@ public class AnSintatico {
 
 	// num_int | num_float
 	private void processaVAL_N() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -442,7 +436,6 @@ public class AnSintatico {
 
 	// expL2
 	private void processaATR_ID() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -471,7 +464,6 @@ public class AnSintatico {
 
 	// rel_op EXP_N | EXP_L3
 	private void processaEXP_L2() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -497,7 +489,6 @@ public class AnSintatico {
 
 	// r_par | logic_op EXP_L | term
 	private void processaEXP_L3() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -517,7 +508,6 @@ public class AnSintatico {
 
 	// l_par EXP_N r_par | id | num_float EXP_N2 | num_int EXP_N2
 	private void processaEXP_N() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -564,7 +554,6 @@ public class AnSintatico {
 
 	// declare id type term
 	private void processaDECL() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -601,7 +590,6 @@ public class AnSintatico {
 	}
 
 	private void processaREP() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -621,7 +609,6 @@ public class AnSintatico {
 
 	// while l_par EXP_L r_par BLOCO
 	private void processaREPW() {
-		Token t;
 		if (bufferToken == null) {
 			t = lexico.nextToken();
 		} else {
@@ -654,7 +641,6 @@ public class AnSintatico {
 	// id EXP_L2 | num_float EXP_N2 rel_op EXP_N | num_int EXP_N2 rel_op EXP_N |
 	// logic_val EXP_L2 | l_par EXP_N r_par
 	private void processaEXP_L() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -728,7 +714,6 @@ public class AnSintatico {
 
 	// for id attrib_op EXP_N to EXP_N BLOCO
 	private void processaREPF() {
-		Token t;
 		if (bufferToken == null) {
 			t = lexico.nextToken();
 		} else {
@@ -773,7 +758,6 @@ public class AnSintatico {
 	// while l_par EXP_L r_par BLOCO CMDS | id IDFLW | for id attrib_op EXP_N to
 	// EXP_N BLOCO CMDS | else |if IFLLW | declare DCFLW |end | end_prog
 	private void processaCMDS() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -817,7 +801,6 @@ public class AnSintatico {
 
 	// attrib_op ATRIB2 term CMDS
 	private void processaIDFLW() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -845,7 +828,6 @@ public class AnSintatico {
 
 	// l_par EXP_L r_par then BLOCO CMDS
 	private void processaIFFLW() {
-		Token t;
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -878,7 +860,7 @@ public class AnSintatico {
 
 	// id type term CMDS
 	private void processaDCFLW() {
-		Token t;
+		
 		if (bufferToken != null) {
 			t = bufferToken;
 			bufferToken = null;
@@ -917,4 +899,5 @@ public class AnSintatico {
 		erroB.append(col);
 		ErrorHandler.getInstance().addErro(erroB.toString());
 	}
+	
 }

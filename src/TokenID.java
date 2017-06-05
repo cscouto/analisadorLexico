@@ -28,7 +28,8 @@ public enum TokenID {
 	DECLARE(24),
 	TO(25),
 	EOF(26),
-	ERROR(27);
+	ERROR(27),
+	$(28);
 	
 	private int valor;
 	
